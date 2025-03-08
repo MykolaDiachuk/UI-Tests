@@ -1,5 +1,6 @@
 package org.example.demo.pages;
 
+import org.example.demo.utils.DriverManager;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
@@ -14,70 +15,56 @@ import java.time.Duration;
 public abstract class BasePage {
     private final Logger logger = LoggerFactory.getLogger(HomePage.class);
 
-    protected WebDriver driver;
-    protected WebDriverWait wait;
-    protected FluentWait<WebDriver> fluentWait;
-
-    public BasePage(WebDriver driver, WebDriverWait wait, FluentWait<WebDriver> fluentWait) {
-        this.driver = driver;
-        this.wait = wait;
-        this.fluentWait = fluentWait;
-
-        PageFactory.initElements(driver, this);
+    public BasePage() {
+        PageFactory.initElements(DriverManager.getDriver(), this);
     }
-
     public WebElement waitForElementToBeVisible(By locator) {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        return DriverManager.getWait().until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
     public WebElement waitForElementToBeVisible(WebElement element) {
-        return wait.until(ExpectedConditions.visibilityOf(element));
+        return DriverManager.getWait().until(ExpectedConditions.visibilityOf(element));
     }
 
     public WebElement waitForElementToBeClickable(By locator) {
-        return wait.until(ExpectedConditions.elementToBeClickable(locator));
+        return DriverManager.getWait().until(ExpectedConditions.elementToBeClickable(locator));
     }
 
     public WebElement waitForElementToBeClickable(WebElement element) {
-        return wait.until(ExpectedConditions.elementToBeClickable(element));
+        return DriverManager.getWait().until(ExpectedConditions.elementToBeClickable(element));
     }
 
     public WebElement waitForElementToBePresent(By locator) {
-        return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+        return DriverManager.getWait().until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 
+    public void clickIfNotSelected(By locator) {
+        scrollToElement(locator);
+        WebElement checkbox = waitForElementToBeVisible(locator);
 
-    public void clickIfNotSelected(WebElement checkbox) {
-        scrollToElement(checkbox);
-
-        if (!checkbox.isSelected()) {
-            Actions actions = new Actions(driver);
-            //actions.scrollToElement(checkbox).build().perform();
+        if (!checkbox.isSelected()&& checkbox.isDisplayed() && checkbox.isEnabled()) {
             waitForElementToBeVisible(checkbox);
             waitForElementToBeClickable(checkbox);
-            actions.click(checkbox).build().perform();
+            checkbox.click();
+        }else {
+            logger.error("Something wrong with checkbox");
         }
     }
 
-    public void scrollAndClick(WebElement element) {
-        scrollToElement(element);
-        waitForElementToBeClickable(element).click();
-    }
-
-    public void scrollToElement(WebElement element) {
+    public void scrollToElement(By locator) {
+        WebElement element = waitForElementToBePresent(locator);
         if (element.isDisplayed()) {
-            ((JavascriptExecutor) driver).executeScript(
-                    "arguments[0].scrollIntoView(true);", element);
+            JavascriptExecutor js = (JavascriptExecutor) DriverManager.getDriver();
+            js.executeScript("arguments[0].scrollIntoView({block: 'center'}); arguments[0].focus();", element);
         }
     }
-
-    private void scrollUp() {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("window.scrollTo(0, 0)");
+    public void scrollAndClick(By locator) {
+        scrollToElement(locator);
+        waitForElementToBeClickable(locator).click();
     }
 
     public WebElement fluentWait(By locator) {
-        return fluentWait.until(driver -> driver.findElement(locator));
+        return DriverManager.getFluentWait().until(driver -> driver.findElement(locator));
     }
 
 

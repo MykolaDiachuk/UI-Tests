@@ -2,9 +2,8 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <suite name="TestSuite" parallel="methods" thread-count="3">
     <test name="UI Tests">
-        <parameter name="browser" value="chrome"/>
         <classes>
-            <class name="org.example.demo.TestPage">
+            <class name="org.example.demo.CatalogTests">
 
             </class>
         </classes>

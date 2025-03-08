@@ -12,23 +12,20 @@ import org.slf4j.LoggerFactory;
 
 public class CatalogMainPage extends BasePage {
     private final Logger logger = LoggerFactory.getLogger(CatalogMainPage.class);
-    private SkillSelector skillSelector;
+    private final SkillSelector skillSelector;
 
-    public CatalogMainPage(WebDriver driver, WebDriverWait wait, FluentWait<WebDriver> fluentWait) {
-        super(driver, wait,fluentWait );
-        this.skillSelector = new SkillSelector(driver, wait, fluentWait);
+    public CatalogMainPage() {
+        super();
+        this.skillSelector = new SkillSelector();
     }
 
     public SkillSelector getSkillSelection() {
         return skillSelector;
     }
 
-
-
     public void selectCheckbox(String language) {
         logger.info("Select checkbox: {}", language);
-        WebElement languageCheckbox = waitForElementToBeVisible(By.xpath(getCheckboxXPath(language)));
-        clickIfNotSelected(languageCheckbox);
+        clickIfNotSelected(By.xpath(getCheckboxXPath(language)));
     }
 
     public boolean isCheckboxSelected(String label) {
@@ -39,6 +36,20 @@ public class CatalogMainPage extends BasePage {
     public boolean isSkillSelected(String skillName) {
         WebElement checkbox = waitForElementToBePresent(By.xpath(getSelectedSkillCheckboxXPath(skillName)));
         return checkbox.isSelected();
+    }
+
+    public void openSkillSelection() {
+        scrollAndClick(By.cssSelector("input.uui-input[placeholder='Search skill']"));
+        skillSelector.setModal(waitForElementToBePresent(By.cssSelector("div.uui-modal-window")));
+        logger.info("Open skill selector");
+    }
+    public CourseEntityPage goToCourse(String courseName) {
+        logger.info("Go to course: {}", courseName);
+        WebElement courseLink = waitForElementToBePresent(
+                By.xpath("//a[contains(@class, 'CatalogCard_itemName__LrEGP') and .//div[text()='"
+                        + courseName + "']]"));
+        courseLink.click();
+        return new CourseEntityPage();
     }
 
     private String getCheckboxXPath(String label) {
@@ -54,22 +65,6 @@ public class CatalogMainPage extends BasePage {
     private String getSelectedSkillCheckboxXPath(String skillName) {
         return "//div[@role='option'][@aria-checked='true'][.//div[@class='uui-input-label' and text()='"
                 + skillName + "']]//input[@type='checkbox']";
-    }
-
-    public void openSkillSelection() {
-        WebElement searchInput = waitForElementToBeVisible(
-                By.cssSelector("input.uui-input[placeholder='Search skill']"));
-        scrollAndClick(searchInput);
-        skillSelector.setModal(waitForElementToBePresent(By.cssSelector("div.uui-modal-window")));
-        logger.info("Open skill selector");
-    }
-    public CourseEntityPage goToCourse(String courseName) {
-        logger.info("Go to course: {}", courseName);
-        WebElement courseLink = waitForElementToBePresent(
-                By.xpath("//a[contains(@class, 'CatalogCard_itemName__LrEGP') and .//div[text()='"
-                        + courseName + "']]"));
-        courseLink.click();
-        return new CourseEntityPage(driver, wait, fluentWait);
     }
 
 

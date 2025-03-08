@@ -1,5 +1,6 @@
 package org.example.demo.pages;
 
+import org.example.demo.utils.DriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -14,8 +15,8 @@ public  class SkillSelector extends BasePage{
     private final Logger logger = LoggerFactory.getLogger(SkillSelector.class);
     private  WebElement modal;
 
-    public SkillSelector(WebDriver driver, WebDriverWait wait, FluentWait<WebDriver> fluentWait) {
-        super(driver , wait, fluentWait);
+    public SkillSelector() {
+        super();
     }
 
     public void setModal(WebElement modal) {
@@ -23,15 +24,18 @@ public  class SkillSelector extends BasePage{
     }
 
     public  void addSkill(String skillName) {
+        scrollToElement(By.cssSelector("input[placeholder='Type text for quick search']"));
+
         WebElement searchInput = waitForElementToBeVisible(
                 By.cssSelector("input[placeholder='Type text for quick search']"));
         searchInput.sendKeys(skillName, Keys.ENTER);
 
-        WebElement skillOption = fluentWait(
-                By.xpath("//div[contains(text(), '" + skillName + "')]"));
+        WebElement skillOption =   DriverManager.getFluentWait()
+                .until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//div[contains(text(), '" + skillName + "')]")));
 
-        fluentWait.until(ExpectedConditions.visibilityOf(skillOption));
-        fluentWait.until(ExpectedConditions.elementToBeClickable(skillOption)).click();
+        DriverManager.getFluentWait().until(
+                ExpectedConditions.elementToBeClickable(skillOption)).click();
 
         searchInput.sendKeys(Keys.CONTROL + "a");
         searchInput.sendKeys(Keys.BACK_SPACE);
@@ -42,7 +46,6 @@ public  class SkillSelector extends BasePage{
         WebElement selectButton = modal.findElement(
                 By.xpath("//button[.//div[text()='Select']]"));
         selectButton.click();
-        wait.until(ExpectedConditions.invisibilityOf(modal));
-        logger.info("Selected skills");
+        DriverManager.getWait().until(ExpectedConditions.invisibilityOf(modal));
     }
 }
