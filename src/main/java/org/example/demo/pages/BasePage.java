@@ -18,16 +18,10 @@ public abstract class BasePage {
     protected WebDriverWait wait;
     protected FluentWait<WebDriver> fluentWait;
 
-    public BasePage(WebDriver driver) {
+    public BasePage(WebDriver driver, WebDriverWait wait, FluentWait<WebDriver> fluentWait) {
         this.driver = driver;
-
-        if (wait == null || fluentWait == null) {
-            this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-            this.fluentWait = new FluentWait<>(driver)
-                    .withTimeout(Duration.ofSeconds(5))
-                    .pollingEvery(Duration.ofMillis(500))
-                    .ignoring(NoSuchElementException.class);
-        }
+        this.wait = wait;
+        this.fluentWait = fluentWait;
 
         PageFactory.initElements(driver, this);
     }
@@ -55,10 +49,12 @@ public abstract class BasePage {
 
     public void clickIfNotSelected(WebElement checkbox) {
         scrollToElement(checkbox);
-        waitForElementToBeVisible(checkbox);
-        waitForElementToBeClickable(checkbox);
+
         if (!checkbox.isSelected()) {
             Actions actions = new Actions(driver);
+            //actions.scrollToElement(checkbox).build().perform();
+            waitForElementToBeVisible(checkbox);
+            waitForElementToBeClickable(checkbox);
             actions.click(checkbox).build().perform();
         }
     }

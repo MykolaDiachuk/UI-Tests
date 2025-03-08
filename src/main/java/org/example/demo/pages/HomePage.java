@@ -6,6 +6,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,8 +17,8 @@ public class HomePage extends BasePage {
     @FindBy(css = "a[href='/catalog']")
     private WebElement catalogLink;
 
-    public HomePage(WebDriver driver) {
-        super(driver);
+    public HomePage(WebDriver driver, WebDriverWait wait, FluentWait<WebDriver> fluentWait) {
+        super(driver, wait, fluentWait);
     }
 
     public CatalogMainPage goToCatalog() {
@@ -24,7 +26,7 @@ public class HomePage extends BasePage {
         wait.until(ExpectedConditions.visibilityOf(catalogLink));
         waitForElementToBeClickable(catalogLink).click();
 
-        return new CatalogMainPage(driver);
+        return new CatalogMainPage(driver, wait,fluentWait);
     }
 
     public void acceptCookies() {

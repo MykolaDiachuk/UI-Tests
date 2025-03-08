@@ -18,6 +18,8 @@ public class BrowserDriverManager {
             setDriver(DriverFactory.createDriver(browser));
         }
         threadLocalDriver.get().manage().window().maximize();
+        logger.info("Getting driver for test in thread: {}  ",
+                Thread.currentThread().getId());
         return threadLocalDriver.get();
     }
 

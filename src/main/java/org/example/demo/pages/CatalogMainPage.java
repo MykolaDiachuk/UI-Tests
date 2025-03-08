@@ -4,6 +4,8 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,14 +14,15 @@ public class CatalogMainPage extends BasePage {
     private final Logger logger = LoggerFactory.getLogger(CatalogMainPage.class);
     private SkillSelector skillSelector;
 
-    public CatalogMainPage(WebDriver driver) {
-        super(driver);
-        this.skillSelector = new SkillSelector(driver);
+    public CatalogMainPage(WebDriver driver, WebDriverWait wait, FluentWait<WebDriver> fluentWait) {
+        super(driver, wait,fluentWait );
+        this.skillSelector = new SkillSelector(driver, wait, fluentWait);
     }
 
     public SkillSelector getSkillSelection() {
         return skillSelector;
     }
+
 
 
     public void selectCheckbox(String language) {
@@ -60,14 +63,13 @@ public class CatalogMainPage extends BasePage {
         skillSelector.setModal(waitForElementToBePresent(By.cssSelector("div.uui-modal-window")));
         logger.info("Open skill selector");
     }
-
     public CourseEntityPage goToCourse(String courseName) {
         logger.info("Go to course: {}", courseName);
         WebElement courseLink = waitForElementToBePresent(
                 By.xpath("//a[contains(@class, 'CatalogCard_itemName__LrEGP') and .//div[text()='"
                         + courseName + "']]"));
         courseLink.click();
-        return new CourseEntityPage(driver);
+        return new CourseEntityPage(driver, wait, fluentWait);
     }
 
 

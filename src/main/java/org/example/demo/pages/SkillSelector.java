@@ -5,6 +5,8 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,8 +14,8 @@ public  class SkillSelector extends BasePage{
     private final Logger logger = LoggerFactory.getLogger(SkillSelector.class);
     private  WebElement modal;
 
-    public SkillSelector(WebDriver driver) {
-        super(driver);
+    public SkillSelector(WebDriver driver, WebDriverWait wait, FluentWait<WebDriver> fluentWait) {
+        super(driver , wait, fluentWait);
     }
 
     public void setModal(WebElement modal) {
