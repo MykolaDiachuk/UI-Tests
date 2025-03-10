@@ -28,14 +28,9 @@ public class HomePage extends BasePage {
     }
 
     public void acceptCookies() {
-        try {
-            WebElement acceptButton =
-                    waitForElementToBePresent(By.id("onetrust-accept-btn-handler"));
+        WebElement acceptButton = waitForElementToBePresent(By.id("onetrust-accept-btn-handler"));
+        if (acceptButton != null && acceptButton.isDisplayed()) {
             waitForElementToBeClickable(acceptButton).click();
-        } catch (NoSuchElementException e) {
-            logger.error("Cookies accept button not found: {}", e.getMessage());
-        } catch (Exception e) {
-            logger.error("Unexpected error: {}", e.getMessage());
         }
     }
 }

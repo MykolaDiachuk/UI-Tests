@@ -39,9 +39,11 @@ public abstract class BasePage {
     protected WebElement waitForElementToBePresent(By locator) {
         return DriverManager.getWait().until(ExpectedConditions.presenceOfElementLocated(locator));
     }
+
     protected List<WebElement> waitForAllElementsToBeVisible(By locator) {
         return DriverManager.getWait().until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
     }
+
     protected void scrollToElement(By locator) {
         WebElement element = waitForElementToBePresent(locator);
         if (element.isDisplayed()) {
@@ -49,20 +51,24 @@ public abstract class BasePage {
             js.executeScript("arguments[0].scrollIntoView({block: 'center'}); arguments[0].focus();", element);
         }
     }
+
     protected void scrollToElement(WebElement element) {
         if (element.isDisplayed()) {
             JavascriptExecutor js = (JavascriptExecutor) DriverManager.getDriver();
             js.executeScript("arguments[0].scrollIntoView({block: 'center'}); arguments[0].focus();", element);
         }
     }
+
     protected void scrollAndClick(By locator) {
         scrollToElement(locator);
         clickElementWithJS(waitForElementToBeClickable(locator));
     }
+
     protected void scrollAndClick(WebElement element) {
         scrollToElement(element);
         clickElementWithJS(waitForElementToBeClickable(element));
     }
+
     private void clickElementWithJS(WebElement element) {
         JavascriptExecutor js = (JavascriptExecutor) DriverManager.getDriver();
         js.executeScript("arguments[0].click();", element);

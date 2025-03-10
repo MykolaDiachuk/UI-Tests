@@ -23,4 +23,13 @@ public class ConfigReader {
     public static String getProperty(String key) {
         return properties.getProperty(key);
     }
+
+    public static String getXPath(String key, String... params) {
+        String xpath = properties.getProperty(key);
+
+        if (params.length > 0) {
+            xpath = xpath.replace("{label}", params[0]);
+        }
+        return xpath;
+    }
 }

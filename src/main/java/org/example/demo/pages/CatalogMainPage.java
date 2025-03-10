@@ -1,6 +1,6 @@
 package org.example.demo.pages;
 
-import org.example.demo.utils.DriverManager;
+import org.example.demo.utils.ConfigReader;
 import org.openqa.selenium.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public class CatalogMainPage extends BasePage {
 
     public void selectCheckbox(String language) {
         logger.info("Select checkbox: {}", language);
-        scrollAndClick(By.xpath(getCheckboxXPath(language)));
+        scrollAndClick(getCheckboxLocator(language));
     }
 
     public void selectLanguages(String... languages) {
@@ -34,34 +34,32 @@ public class CatalogMainPage extends BasePage {
     }
 
     private List<WebElement> getListOfLenguages() {
-        return waitForAllElementsToBeVisible(By.xpath(getXPathToListOfLanguages()));
+        return waitForAllElementsToBeVisible(geListOfLanguagesLocator());
     }
 
     public void openLanguageSelection() {
-        scrollAndClick(By.xpath(getXPathToLanguageModal()));
+        scrollAndClick(getLanguageModalLocator());
     }
 
     public void openSkillSelection() {
-        scrollAndClick(By.cssSelector("input.uui-input[placeholder='Search skill']"));
+        scrollAndClick(getSkillSelectionLocator());
         logger.info("Open skill selector");
     }
 
     public CourseEntityPage goToCourse(String courseName) {
         logger.info("Go to course: {}", courseName);
-        WebElement courseLink = waitForElementToBePresent(
-                By.xpath("//a[contains(@class, 'CatalogCard_itemName__LrEGP') and .//div[text()='"
-                        + courseName + "']]"));
+        WebElement courseLink = waitForElementToBePresent(getCourseLocator(courseName));
         courseLink.click();
         return new CourseEntityPage();
     }
 
     public boolean isCheckboxSelected(String label) {
-        WebElement checkbox = waitForElementToBePresent(By.xpath(getCheckboxInputXPath(label)));
+        WebElement checkbox = waitForElementToBePresent(getCheckboxInputLocator(label));
         return checkbox.isSelected();
     }
 
     public boolean isSkillSelected(String skillName) {
-        WebElement checkbox = waitForElementToBePresent(By.xpath(getSelectedSkillCheckboxXPath(skillName)));
+        WebElement checkbox = waitForElementToBePresent(getSelectedSkillCheckboxLocator(skillName));
         return checkbox.isSelected();
     }
 
@@ -78,29 +76,32 @@ public class CatalogMainPage extends BasePage {
                 .anyMatch(lang -> lang.equalsIgnoreCase(text.trim()));
     }
 
-    private String getCheckboxXPath(String label) {
-        return "//label[.//div[contains(@class, 'uui-input-label') and text()='"
-                + label + "']]//div[contains(@class,'uui-input-label')]";
+    private By getCheckboxLocator(String label) {
+        return By.xpath(ConfigReader.getXPath("checkbox.xpath", label));
     }
 
-    private String getCheckboxInputXPath(String label) {
-        return "//div[@role='option'][.//div[text()='" +
-                label + "']]//input[@type='checkbox']";
+    private By getCheckboxInputLocator(String label) {
+        return By.xpath(ConfigReader.getXPath("checkbox.input.xpath", label));
     }
 
-    private String getSelectedSkillCheckboxXPath(String skillName) {
-        return "//div[@role='option'][@aria-checked='true'][.//div[@class='uui-input-label' and text()='"
-                + skillName + "']]//input[@type='checkbox']";
+    private By getSelectedSkillCheckboxLocator(String skillName) {
+        return By.xpath(ConfigReader.getXPath("skill.checkbox.xpath", skillName));
     }
 
-    private String getXPathToLanguageModal() {
-        return "//button[contains(@class, 'uui-button-box') and " +
-                ".//div[text()='SHOW ALL 33 LANGUAGES']]";
+    private By getLanguageModalLocator() {
+        return By.xpath(ConfigReader.getXPath("language.modal.xpath"));
     }
 
-    private String getXPathToListOfLanguages() {
-        return "//div[contains(@class, \"HaYEWG\")]//div//div[contains(@class," +
-                "\"uui-flex-row e5acV8 _1z7meY -clickable VspOI7\")]";
+    private By geListOfLanguagesLocator() {
+        return By.xpath(ConfigReader.getXPath("languages.list.xpath"));
+    }
+
+    private By getCourseLocator(String courseName) {
+        return By.xpath(ConfigReader.getXPath("course.link.xpath", courseName));
+    }
+
+    private By getSkillSelectionLocator() {
+        return By.cssSelector(ConfigReader.getXPath("skill.selection.xpath"));
     }
 
 
