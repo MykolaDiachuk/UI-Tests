@@ -11,61 +11,60 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
+import java.util.List;
 
 public abstract class BasePage {
     private final Logger logger = LoggerFactory.getLogger(HomePage.class);
 
-    public BasePage() {
+    protected BasePage() {
         PageFactory.initElements(DriverManager.getDriver(), this);
     }
-    public WebElement waitForElementToBeVisible(By locator) {
+
+    protected WebElement waitForElementToBeVisible(By locator) {
         return DriverManager.getWait().until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
-    public WebElement waitForElementToBeVisible(WebElement element) {
+    protected WebElement waitForElementToBeVisible(WebElement element) {
         return DriverManager.getWait().until(ExpectedConditions.visibilityOf(element));
     }
 
-    public WebElement waitForElementToBeClickable(By locator) {
+    protected WebElement waitForElementToBeClickable(By locator) {
         return DriverManager.getWait().until(ExpectedConditions.elementToBeClickable(locator));
     }
 
-    public WebElement waitForElementToBeClickable(WebElement element) {
+    protected WebElement waitForElementToBeClickable(WebElement element) {
         return DriverManager.getWait().until(ExpectedConditions.elementToBeClickable(element));
     }
 
-    public WebElement waitForElementToBePresent(By locator) {
+    protected WebElement waitForElementToBePresent(By locator) {
         return DriverManager.getWait().until(ExpectedConditions.presenceOfElementLocated(locator));
     }
-
-    public void clickIfNotSelected(By locator) {
-        scrollToElement(locator);
-        WebElement checkbox = waitForElementToBeVisible(locator);
-
-        if (!checkbox.isSelected()&& checkbox.isDisplayed() && checkbox.isEnabled()) {
-            waitForElementToBeVisible(checkbox);
-            waitForElementToBeClickable(checkbox);
-            checkbox.click();
-        }else {
-            logger.error("Something wrong with checkbox");
-        }
+    protected List<WebElement> waitForAllElementsToBeVisible(By locator) {
+        return DriverManager.getWait().until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
     }
-
-    public void scrollToElement(By locator) {
+    protected void scrollToElement(By locator) {
         WebElement element = waitForElementToBePresent(locator);
         if (element.isDisplayed()) {
             JavascriptExecutor js = (JavascriptExecutor) DriverManager.getDriver();
             js.executeScript("arguments[0].scrollIntoView({block: 'center'}); arguments[0].focus();", element);
         }
     }
-    public void scrollAndClick(By locator) {
+    protected void scrollToElement(WebElement element) {
+        if (element.isDisplayed()) {
+            JavascriptExecutor js = (JavascriptExecutor) DriverManager.getDriver();
+            js.executeScript("arguments[0].scrollIntoView({block: 'center'}); arguments[0].focus();", element);
+        }
+    }
+    protected void scrollAndClick(By locator) {
         scrollToElement(locator);
-        waitForElementToBeClickable(locator).click();
+        clickElementWithJS(waitForElementToBeClickable(locator));
     }
-
-    public WebElement fluentWait(By locator) {
-        return DriverManager.getFluentWait().until(driver -> driver.findElement(locator));
+    protected void scrollAndClick(WebElement element) {
+        scrollToElement(element);
+        clickElementWithJS(waitForElementToBeClickable(element));
     }
-
-
+    private void clickElementWithJS(WebElement element) {
+        JavascriptExecutor js = (JavascriptExecutor) DriverManager.getDriver();
+        js.executeScript("arguments[0].click();", element);
+    }
 }

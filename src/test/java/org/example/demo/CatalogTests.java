@@ -6,7 +6,7 @@ import org.example.demo.pages.HomePage;
 import org.example.demo.utils.ConfigReader;
 import org.example.demo.utils.DriverManager;
 import org.openqa.selenium.WebDriver;
-
+import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
@@ -29,7 +29,7 @@ public class CatalogTests {
         catalogMainPage = homePage.goToCatalog();
     }
 
-    @Test
+    @Test(description = "Verify that filters can be selected successfully on the catalog page.")
     public void shouldSelectFiltersSuccessfully() {
         catalogMainPage.selectCheckbox("English");
         catalogMainPage.selectCheckbox("1-4 hours");
@@ -41,7 +41,7 @@ public class CatalogTests {
 
     }
 
-    @Test
+    @Test(description = "Verify that skills can be selected and added for search.")
     public void shouldSelectSkillsForSearch() {
         catalogMainPage.openSkillSelection();
 
@@ -55,7 +55,7 @@ public class CatalogTests {
         assertThat(catalogMainPage.isSkillSelected("AI in Test Automation")).isTrue();
     }
 
-    @Test
+    @Test(description = "Verify that a selected course page opens correctly.")
     public void shouldOpenSelectedCoursePage() {
         catalogMainPage.selectCheckbox("English");
         catalogMainPage.selectCheckbox("Up to 1 hour");
@@ -68,6 +68,27 @@ public class CatalogTests {
                 .isEqualTo("Amazon Bedrock Getting Started");
     }
 
+    @Test(description = "Verifies that selecting valid languages " +
+            "('English', 'Spanish', 'French') correctly marks them as selected.")
+    public void shouldSelectLanguagesWhenValidLanguagesProvided() {
+        catalogMainPage.openLanguageSelection();
+        catalogMainPage.selectLanguages("English", "Spanish", "French");
+
+        assertThat(catalogMainPage.isLanguageSelected("English")).isTrue();
+        assertThat(catalogMainPage.isLanguageSelected("Spanish")).isTrue();
+        assertThat(catalogMainPage.isLanguageSelected("French")).isTrue();
+    }
+
+    @Test(description = "Verifies that invalid languages " +
+            "('Armenian', 'Belarusian', 'Hebrew') are not selected, even if attempted." )
+    public void shouldNotSelectLanguagesWhenInvalidLanguagesProvided(){
+        catalogMainPage.openLanguageSelection();
+        catalogMainPage.selectLanguages("English", "Spanish", "French");
+
+        assertThat(catalogMainPage.isLanguageSelected("Armenian")).isFalse();
+        assertThat(catalogMainPage.isLanguageSelected("Belarusian")).isFalse();
+        assertThat(catalogMainPage.isLanguageSelected("Hebrew")).isFalse();
+    }
 
     @AfterMethod
     public void tearDown() {
