@@ -13,7 +13,7 @@ public class ConfigReader {
     public static final Properties properties = new Properties();
 
     static {
-        try (FileInputStream fileInputStream = new FileInputStream("src/test/resources/config.properties")) {
+        try (FileInputStream fileInputStream = new FileInputStream("src/main/resources/config.properties")) {
             properties.load(fileInputStream);
         } catch (IOException e) {
             logger.error("Failed to open file: ", e);
@@ -24,12 +24,4 @@ public class ConfigReader {
         return properties.getProperty(key);
     }
 
-    public static String getXPath(String key, String... params) {
-        String xpath = properties.getProperty(key);
-
-        if (params.length > 0) {
-            xpath = xpath.replace("{label}", params[0]);
-        }
-        return xpath;
-    }
 }

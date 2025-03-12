@@ -8,11 +8,12 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import static org.example.demo.utils.Waiter.*;
 
 public class HomePage extends BasePage {
     private final Logger logger = LoggerFactory.getLogger(HomePage.class);
 
-    @FindBy(css = "a[href='/catalog']")
+    @FindBy(css = "a.AppMenuItem_appMenuItem__-8c3R[href='/catalog']")
     private WebElement catalogLink;
 
     public HomePage() {
@@ -21,7 +22,7 @@ public class HomePage extends BasePage {
 
     public CatalogMainPage goToCatalog() {
         logger.info("Navigating to catalog page");
-        DriverManager.getWait().until(ExpectedConditions.visibilityOf(catalogLink));
+        waitForElementToBeVisible(catalogLink);
         waitForElementToBeClickable(catalogLink).click();
 
         return new CatalogMainPage();
