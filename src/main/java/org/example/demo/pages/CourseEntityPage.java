@@ -17,7 +17,7 @@ public class CourseEntityPage extends BasePage {
     }
 
     public String getTitle() {
-        logger.info("Getting course title: {}", title);
+        logger.info("Get course title: {}", title);
         return waitForElementToBeVisible(title).getText();
 
     }

@@ -12,42 +12,50 @@ import static org.example.demo.utils.Waiter.*;
 public class SkillSelectorModal extends BasePage {
     private final Logger logger = LoggerFactory.getLogger(SkillSelectorModal.class);
 
-    private final By SKILL_SEARCHER = By.cssSelector("input[placeholder='Type text for quick search']");
+    private static final By SKILL_SEARCHER = By.cssSelector("input[placeholder='Type text for quick search']");
+    private static final By SELECT_BUTTON = By.xpath("//button[.//div[text()='Select']]");
+    private static final By MODAL_WINDOW = By.cssSelector("div.uui-modal-window");
+
 
     public SkillSelectorModal() {
         super();
     }
 
     public void addSkill(String skillName) {
+        logger.info("Added skill {} in modal", skillName);
         searchSkill(skillName);
         selectSkillFromResults(skillName);
         clearSearchInput();
-        logger.info("Added skill: " + skillName);
     }
 
     private void searchSkill(String skillName) {
-        scrollToElement(waitForElementToBePresent(SKILL_SEARCHER));
-        waitForElementToBeVisible(
-                SKILL_SEARCHER).sendKeys(skillName, Keys.ENTER);
+        logger.info("Searching for skill '{}' in modal", skillName);
+        WebElement searchInput = waitForElementToBeVisible(SKILL_SEARCHER);
+        scrollToElement(searchInput);
+        searchInput.sendKeys(skillName, Keys.ENTER);
     }
 
     private void selectSkillFromResults(String skillName) {
-        getFluentWait()
-                .until(ExpectedConditions.elementToBeClickable(
-                 By.xpath("//div[contains(text(), '" + skillName + "')]")))
-                .click();
+        logger.info("Selecting skill '{}' from results in modal", skillName);
+        WebElement skillOption = waitForElementToBeClickable(getSkillLocator(skillName));
+        skillOption.click();
     }
 
     private void clearSearchInput() {
+        logger.info("Clear search input in modal");
         WebElement searchInput = waitForElementToBeVisible(SKILL_SEARCHER);
         searchInput.sendKeys(Keys.CONTROL + "a");
         searchInput.sendKeys(Keys.BACK_SPACE);
     }
 
     public void selectSkills() {
-        DriverManager.getDriver().findElement(
-                By.xpath("//button[.//div[text()='Select']]")).click();
-        waitForAllElementsToBeInvisible(By.cssSelector("div.uui-modal-window"));
+        logger.info("Selecting skills from modal");
+        waitForElementToBeClickable(SELECT_BUTTON).click();
+        waitForAllElementsToBeInvisible(MODAL_WINDOW);
+    }
+
+    private By getSkillLocator(String skillName) {
+        return By.xpath("//div[contains(text(), '" + skillName + "')]");
     }
 
 

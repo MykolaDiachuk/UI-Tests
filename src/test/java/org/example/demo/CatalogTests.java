@@ -22,9 +22,9 @@ public class CatalogTests {
 
     @BeforeMethod
     public void setup() {
+        logger.info("Initialize browser");
         WebDriver driver = DriverManager.getDriver();
         driver.get(ConfigReader.getProperty("base_url"));
-        logger.info("Initialize browser");
     }
 
     @BeforeMethod(dependsOnMethods = "setup")
@@ -95,7 +95,7 @@ public class CatalogTests {
 
     @AfterMethod
     public void tearDown() {
-        DriverManager.quitDriver();
         logger.info("Quit driver");
+        DriverManager.quitDriver();
     }
 }

@@ -16,6 +16,11 @@ public class CatalogMainPage extends BasePage {
 
     private final SkillSelectorModal skillSelector;
 
+    private static final By LANGUAGE_MODAL = By.xpath("//button[contains(@class, 'uui-button-box') and .//div[text()='SHOW ALL 33 LANGUAGES']]");
+    private static final By LIST_OF_LANGUAGES = By.xpath("//div[@role='option']//div[contains(@class, 'FMk1Jo uui-text')]");
+    private static final By SKILL_SELECTION_INPUT = By.cssSelector("input.uui-input[placeholder='Search skill']");
+
+
     public CatalogMainPage() {
         super();
         this.skillSelector = new SkillSelectorModal();
@@ -25,12 +30,13 @@ public class CatalogMainPage extends BasePage {
         return skillSelector;
     }
 
-    public void selectCheckbox(String language) {
-        scrollAndClick(getCheckboxLocator(language));
-        logger.info("Select checkbox: {}", language);
+    public void selectCheckbox(String checkboxText) {
+        logger.info("Select checkbox: {}", checkboxText);
+        scrollAndClick(getCheckboxLocator(checkboxText));
     }
 
     public void selectLanguages(String... languages) {
+        logger.info("Select languages: {}", Arrays.toString(languages));
         getListOfLanguages().stream()
                 .filter(element -> languagesContainsText(languages, element.getText()))
                 .forEach(this::scrollAndClick);
@@ -38,22 +44,23 @@ public class CatalogMainPage extends BasePage {
 
     private List<WebElement> getListOfLanguages() {
         logger.info("Get list of languages");
-        return waitForAllElementsToBePresent(geListOfLanguagesLocator());
+        return waitForAllElementsToBePresent(LIST_OF_LANGUAGES);
     }
 
     public void openLanguageSelectionModal() {
-        scrollAndClick(getLanguageModalLocator());
+        logger.info("Open language selection modal");
+        scrollAndClick(LANGUAGE_MODAL);
     }
 
     public void openSkillSelection() {
-        scrollAndClick(getSkillSelectionLocator());
-        logger.info("Open skill selector");
+        logger.info("Open skill selection modal");
+        scrollAndClick(SKILL_SELECTION_INPUT);
     }
 
     public CourseEntityPage goToCourse(String courseName) {
+        logger.info("Go to course: {}", courseName);
         WebElement courseLink = waitForElementToBePresent(getCourseLocator(courseName));
         courseLink.click();
-        logger.info("Go to course: {}", courseName);
         return new CourseEntityPage();
     }
 
@@ -97,21 +104,7 @@ public class CatalogMainPage extends BasePage {
         return By.xpath("//div[@role='option'][@aria-checked='true'][.//div[@class='uui-input-label' and text()='" + skillName + "']]//input[@type='checkbox']");
     }
 
-    private By getLanguageModalLocator() {
-        return By.xpath("//button[contains(@class, 'uui-button-box') and .//div[text()='SHOW ALL 33 LANGUAGES']]");
-    }
-
-    private By geListOfLanguagesLocator() {
-        return By.xpath("//div[@role='option']//div[contains(@class, 'FMk1Jo uui-text')]");
-    }
-
     private By getCourseLocator(String courseName) {
         return By.xpath("//div[contains(@class, 'OverflowedTypography_content__') and text()='" + courseName + "']");
     }
-
-    private By getSkillSelectionLocator() {
-        return By.cssSelector("input.uui-input[placeholder='Search skill']");
-    }
-
-
 }
