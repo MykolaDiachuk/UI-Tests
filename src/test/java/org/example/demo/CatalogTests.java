@@ -1,4 +1,5 @@
 package org.example.demo;
+
 import org.example.demo.pages.CatalogMainPage;
 import org.example.demo.pages.CourseEntityPage;
 import org.example.demo.pages.HomePage;
@@ -7,13 +8,17 @@ import org.example.demo.utils.DriverManager;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.example.demo.enums.EstimatedEffort.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.example.demo.enums.EstimatedEffort.ONE_TO_FOUR_HOURS;
+import static org.example.demo.enums.EstimatedEffort.UP_TO_1_HOUR;
 import static org.example.demo.enums.Language.*;
-import static org.example.demo.enums.TargetLevel.*;
 import static org.example.demo.enums.Skill.*;
+import static org.example.demo.enums.TargetLevel.NOT_DEFINED;
+import static org.example.demo.enums.TargetLevel.NOVICE;
 
 public class CatalogTests {
     private final Logger logger = LoggerFactory.getLogger(CatalogTests.class);

@@ -8,6 +8,9 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 
 public class DriverFactory {
 
+    private DriverFactory() {
+    }
+
     static WebDriver createDriver(String browser) {
         WebDriver driver;
 
@@ -29,5 +32,4 @@ public class DriverFactory {
         }
         return driver;
     }
-
 }

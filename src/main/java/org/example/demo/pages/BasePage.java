@@ -1,11 +1,13 @@
 package org.example.demo.pages;
 
 import org.example.demo.utils.DriverManager;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
-
-import static org.example.demo.utils.Waiter.*;
+import static org.example.demo.utils.Waiter.waitForElementToBeClickable;
+import static org.example.demo.utils.Waiter.waitForElementToBePresent;
 
 public abstract class BasePage {
     protected BasePage() {

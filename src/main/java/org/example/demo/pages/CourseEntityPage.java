@@ -4,7 +4,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static org.example.demo.utils.Waiter.*;
+
+import static org.example.demo.utils.Waiter.waitForElementToBeVisible;
 
 public class CourseEntityPage extends BasePage {
     private final Logger logger = LoggerFactory.getLogger(CourseEntityPage.class);

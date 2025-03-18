@@ -8,9 +8,8 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class ConfigReader {
-    private static final Logger logger = LoggerFactory.getLogger(ConfigReader.class);
-
     public static final Properties properties = new Properties();
+    private static final Logger logger = LoggerFactory.getLogger(ConfigReader.class);
 
     static {
         try (FileInputStream fileInputStream = new FileInputStream("src/main/resources/config.properties")) {
@@ -18,10 +17,13 @@ public class ConfigReader {
         } catch (IOException e) {
             logger.error("Failed to open file: ", e);
         }
+
+    }
+
+    private ConfigReader() {
     }
 
     public static String getProperty(String key) {
         return properties.getProperty(key);
     }
-
 }

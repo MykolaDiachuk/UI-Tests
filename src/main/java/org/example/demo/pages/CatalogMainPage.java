@@ -1,24 +1,25 @@
 package org.example.demo.pages;
 
 import org.example.demo.utils.DriverManager;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static org.example.demo.utils.Waiter.*;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static org.example.demo.utils.Waiter.waitForAllElementsToBePresent;
+import static org.example.demo.utils.Waiter.waitForElementToBePresent;
+
 
 public class CatalogMainPage extends BasePage {
-    private final Logger logger = LoggerFactory.getLogger(CatalogMainPage.class);
-
-    private final SkillSelectorModal skillSelector;
-
     private static final By LANGUAGE_MODAL = By.xpath("//button[contains(@class, 'uui-button-box') and .//div[text()='SHOW ALL 33 LANGUAGES']]");
     private static final By LIST_OF_LANGUAGES = By.xpath("//div[@role='option']//div[contains(@class, 'FMk1Jo uui-text')]");
     private static final By SKILL_SELECTION_INPUT = By.cssSelector("input.uui-input[placeholder='Search skill']");
+    private final Logger logger = LoggerFactory.getLogger(CatalogMainPage.class);
+    private final SkillSelectorModal skillSelector;
 
 
     public CatalogMainPage() {

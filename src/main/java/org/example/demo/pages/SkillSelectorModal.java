@@ -1,21 +1,18 @@
 package org.example.demo.pages;
 
-import org.example.demo.utils.DriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import static org.example.demo.utils.Waiter.*;
 
 public class SkillSelectorModal extends BasePage {
-    private final Logger logger = LoggerFactory.getLogger(SkillSelectorModal.class);
-
     private static final By SKILL_SEARCHER = By.cssSelector("input[placeholder='Type text for quick search']");
     private static final By SELECT_BUTTON = By.xpath("//button[.//div[text()='Select']]");
     private static final By MODAL_WINDOW = By.cssSelector("div.uui-modal-window");
-
+    private final Logger logger = LoggerFactory.getLogger(SkillSelectorModal.class);
 
     public SkillSelectorModal() {
         super();
@@ -57,6 +54,4 @@ public class SkillSelectorModal extends BasePage {
     private By getSkillLocator(String skillName) {
         return By.xpath("//div[contains(text(), '" + skillName + "')]");
     }
-
-
 }

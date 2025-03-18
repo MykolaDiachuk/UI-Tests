@@ -15,6 +15,9 @@ public class Waiter {
     private static final Duration TIMEOUT = Duration.ofSeconds(20);
     private static final Duration POLLING_INTERVAL = Duration.ofMillis(500);
 
+    private Waiter() {
+    }
+
     private static WebDriverWait getWait() {
         return new WebDriverWait(DriverManager.getDriver(), TIMEOUT);
     }
@@ -48,8 +51,6 @@ public class Waiter {
     }
 
     public static FluentWait<WebDriver> getFluentWait() {
-        return new FluentWait<>(DriverManager.getDriver())
-                .withTimeout(TIMEOUT)
-                .pollingEvery(POLLING_INTERVAL);
+        return new FluentWait<>(DriverManager.getDriver()).withTimeout(TIMEOUT).pollingEvery(POLLING_INTERVAL);
     }
 }
